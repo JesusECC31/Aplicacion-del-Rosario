@@ -1,0 +1,953 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Rosario Completo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+    <style>
+        body {
+            background-attachment: fixed !important;
+            background-position: center center !important;
+            background-size: cover !important;
+        }
+
+        .rosario-panel {
+            padding: 22px 18px;
+            max-width: 920px;
+            margin: 0 auto;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+        }
+
+        .rosario-header {
+            text-align: center;
+            margin-bottom: 6px;
+        }
+
+        .rosario-header h2 {
+            margin-bottom: 10px;
+            font-size: clamp(1.4rem, 4vw, 1.9rem);
+            color: #f5d57f;
+        }
+
+        .instrucciones {
+            font-size: 1rem;
+            color: #f0e8c8;
+            line-height: 1.65;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .misterio-list {
+            display: grid;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .rosario-section {
+            border-radius: 20px;
+            background: rgba(10, 10, 16, 0.5);
+            border: 1px solid rgba(245, 213, 127, 0.18);
+            overflow: hidden;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.16);
+        }
+
+        .rosario-section summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 18px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: #f5d57f;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .rosario-section summary::after {
+            content: '▾';
+            font-size: 1.1rem;
+            color: #f5d57f;
+            transition: transform 0.25s ease;
+        }
+
+        .rosario-section[open] summary::after {
+            transform: rotate(180deg);
+        }
+
+        .rosario-section summary:hover {
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .rosario-section summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .section-content {
+            padding: 16px 18px 20px;
+            background: rgba(0, 0, 0, 0.12);
+            color: #e9e4d8;
+            line-height: 1.85;
+            font-size: 1.12rem;
+            min-height: 260px;
+            max-height: 80vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        .section-content p {
+            margin-bottom: 14px;
+        }
+
+        .misterio-indicators {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin: 14px 0 8px;
+        }
+
+        .misterio-indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(245, 213, 127, 0.45);
+            border: 1px solid rgba(245, 213, 127, 0.85);
+        }
+
+        .misterio-indicator.active {
+            background: #f5d57f;
+            box-shadow: 0 0 10px rgba(245, 213, 127, 0.6);
+        }
+
+        #tipo-misterio {
+            display: inline-block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #f5d57f;
+            text-transform: capitalize !important;
+        }
+
+        #misterio-titulo {
+            margin: 0;
+            font-size: clamp(1rem, 3vw, 1.4rem);
+            line-height: 1.3;
+            text-transform: capitalize !important;
+            color: #f5d57f;
+            cursor: default;
+        }
+
+        #misterio-subtitulo {
+            margin: 6px 0 0;
+            font-size: 0.95rem;
+            color: #f0e4b8;
+            min-height: 1.2rem;
+            text-transform: capitalize !important;
+        }
+
+        .misterio-actual {
+            margin: 10px 0 0;
+            font-size: 0.88rem;
+            color: #f0e4b8;
+            min-height: 1.4rem;
+            text-transform: capitalize !important;
+        }
+
+        .rosario-panel {
+            position: relative;
+            padding: 18px 16px;
+            max-width: 920px;
+            margin: 0 auto;
+        }
+
+        .inicio-flecha {
+            position: absolute;
+            top: 10px;
+            left: 0;
+            z-index: 2;
+        }
+
+        .rosario-header {
+            padding-top: 16px;
+        }
+
+        /* Collar más alto para no solapar la card de arriba */
+        .misterio-card {
+            padding: 8px 10px;
+            width: min(100%, 520px);
+            max-width: 520px;
+            margin: -6px auto 0;
+            min-height: 120px;
+        }
+
+        .misterio-card h3 {
+            font-size: clamp(0.78rem, 1.8vw, 0.92rem);
+            line-height: 1.2;
+            cursor: default;
+        }
+
+        .misterio-actual {
+            font-size: 0.88rem;
+        }
+
+        /* Botón Leer más */
+        .btn-leer-mas {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 16px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #f5d57f;
+            background: rgba(245, 213, 127, 0.1);
+            border: 1px solid rgba(245, 213, 127, 0.45);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background 0.18s ease, transform 0.15s ease;
+            letter-spacing: 0.03em;
+        }
+
+        .btn-leer-mas:hover {
+            background: rgba(245, 213, 127, 0.2);
+            transform: scale(1.03);
+        }
+
+        .modal-misterio {
+            display: none;
+            position: fixed;
+            z-index: 1001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            pointer-events: auto;
+        }
+
+        .modal-misterio.open {
+            display: flex;
+            animation: modalFadeIn 0.25s ease both;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.96); }
+            to   { opacity: 1; transform: scale(1); }
+        }
+
+        .modal-misterio-content {
+            position: relative;
+            background: linear-gradient(160deg, rgba(18, 18, 30, 0.99) 0%, rgba(28, 22, 40, 0.99) 100%);
+            color: #f5e9c7;
+            border-radius: 24px;
+            border: 1px solid rgba(245, 213, 127, 0.3);
+            max-width: 680px;
+            width: 100%;
+            max-height: 82vh;
+            overflow: visible;
+            padding: 60px 28px 28px;
+            box-shadow:
+                0 32px 80px rgba(0, 0, 0, 0.7),
+                0 0 0 1px rgba(245, 213, 127, 0.08) inset;
+        }
+
+        /* Línea dorada decorativa en la parte superior del modal */
+        .modal-misterio-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 10%;
+            width: 80%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(245, 213, 127, 0.6), transparent);
+            border-radius: 2px;
+        }
+
+        .modal-misterio-body {
+            max-height: calc(82vh - 64px);
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+
+        .modal-misterio-body::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .modal-misterio-body::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.05);
+            border-radius: 4px;
+        }
+
+        .modal-misterio-body::-webkit-scrollbar-thumb {
+            background: rgba(245, 213, 127, 0.3);
+            border-radius: 4px;
+        }
+
+        .modal-misterio-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(245, 213, 127, 0.1);
+            color: #f5d57f;
+            border: 1px solid rgba(245, 213, 127, 0.35);
+            cursor: pointer;
+            margin: 0;
+            z-index: 2;
+            font-size: 1rem;
+            transition: background 0.18s ease, transform 0.15s ease;
+        }
+
+        .modal-misterio-close:hover {
+            background: rgba(245, 213, 127, 0.2);
+            transform: scale(1.08);
+        }
+
+        .modal-misterio h3 {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: clamp(1.1rem, 3vw, 1.5rem);
+            color: #f5d57f;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.04em;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(245, 213, 127, 0.18);
+        }
+
+        .modal-misterio .modal-body {
+            line-height: 1.85;
+            color: #e9e4d8;
+            padding-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .modal-misterio .modal-body p {
+            margin-bottom: 14px;
+        }
+
+        .section-content {
+            font-size: 1.12rem;
+            min-height: 260px;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .section-content p {
+            font-size: 1.12rem;
+            line-height: 1.85;
+        }
+
+        .boton {
+            font-size: 0.88rem;
+            padding: 8px 10px;
+        }
+
+        .boton-accion {
+            width: auto;
+            min-width: 70px;
+            max-width: 110px;
+            padding: 7px 10px;
+            font-size: 0.85rem;
+            border-radius: 10px;
+        }
+
+        .rosario-controles {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 360px;
+            margin: 10px auto 0;
+            flex-wrap: nowrap;
+        }
+
+        .progreso {
+            font-size: 0.9rem;
+        }
+
+        .boton-final {
+            width: min(100%, 320px);
+            margin: 24px auto 0;
+        }
+
+        .boton-cerrar {
+            width: 34px;
+            height: 34px;
+            padding: 0;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 8px;
+            cursor: pointer;
+            opacity: 0.8;
+            transition: transform 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+            text-decoration: none;
+            color: white;
+        }
+
+        .boton-cerrar:hover {
+            opacity: 1;
+            background: rgba(255,255,255,0.18);
+            transform: scale(1.05);
+        }
+
+        .boton-cerrar svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .boton-icono {
+            margin: 0 auto;
+            display: inline-flex;
+        }
+
+        /* Collar separado para no tapar nada */
+        .rosary-necklace {
+            margin-top: 40px;
+            margin-bottom: 40px;
+        }
+
+        @media (max-width: 760px) {
+            .rosario-panel {
+                padding: 14px 10px;
+            }
+
+            .rosario-header h2 {
+                font-size: 1.9rem;
+            }
+
+            .misterio-card {
+                padding: 14px;
+            }
+
+            .misterio-card h3 {
+                font-size: 1.3rem;
+            }
+
+            .misterio-actual {
+                font-size: 1rem;
+            }
+
+            .rosary-necklace {
+                width: min(220px, 70vw);
+                height: min(220px, 70vw);
+            }
+
+            .rosary-center {
+                width: min(54px, 16vw);
+                height: min(54px, 16vw);
+            }
+
+            .rosary-bead {
+                width: 8px;
+                height: 8px;
+            }
+
+            .rosary-bead.large {
+                width: 16px;
+                height: 16px;
+                background: rgba(245, 213, 127, 0.85);
+                border-color: rgba(245, 213, 127, 1);
+            }
+
+            .boton,
+            .boton-accion {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+
+            .rosario-controles {
+                gap: 10px;
+            }
+
+            .boton-final {
+                width: min(100%, 260px);
+            }
+        }
+    </style>
+</head><body data-fondo="{{ url_for('static', filename=fondo) }}">
+
+<div class="rosario-panel">
+    <a href="/home" class="boton-cerrar inicio-flecha" aria-label="Volver al inicio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+        </svg>
+    </a>
+    <div class="rosario-header">
+        <h2>✝ Rosario de Emaús</h2>
+    </div>
+
+    <div class="misterio-card">
+        <span class="tipo-misterio" id="tipo-misterio">inicio</span>
+        <h3 id="misterio-titulo">bienvenido al rosario</h3>
+        <p id="misterio-actual" class="misterio-actual"></p>
+        <p id="misterio-subtitulo"></p>
+        <div style="text-align:center; margin: 8px 0 4px;">
+            <button class="btn-leer-mas" id="btnLeerMas" style="display:none;">Leer más</button>
+        </div>
+        <div id="misterio-indicators" class="misterio-indicators"></div>
+        <div id="misterio-contenido" class="section-content" style="display:none;"></div>
+    </div>
+
+    <div class="modal-misterio" id="modalMystery" role="dialog" aria-modal="true" aria-labelledby="modalMysteryTitle">
+        <div class="modal-misterio-content">
+            <button class="modal-misterio-close" id="closeModalMystery" aria-label="Cerrar misterio">✕</button>
+            <div class="modal-misterio-body">
+                <h3 id="modalMysteryTitle">Misterio</h3>
+                <div class="modal-body" id="modalMysteryBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="rosary-necklace">
+        <div class="rosary-inner-glow"></div>
+        {% for index in range(55) %}
+            {% set bead_class = 'rosary-bead' + (' large' if index % 11 == 0 else '') %}
+            <span class="{{ bead_class }}" data-index="{{ index }}" style="--i: {{ index }};"></span>
+        {% endfor %}
+        <div class="rosary-center" style="overflow:visible;">
+            <img src="{{ url_for('static', filename='fondos/collar.png') }}" alt="collar" style="width:210%; height:210%; object-fit:contain; position:absolute; top:50%; left:50%; transform:translate(-50%, -50%);">
+        </div>
+    </div>
+
+    <div class="progreso" id="progreso">Cuenta 0 de 55</div>
+
+    <div class="rosario-controles">
+        <button id="previousBtn" class="boton boton-accion">Anterior</button>
+        <button id="nextBtn" class="boton boton-accion">Siguiente</button>
+    </div>
+</div>
+
+<script>
+    const sequence = [];
+
+    function addStep(step) {
+        sequence.push(step);
+    }
+
+    function buildSequence() {
+        sequence.length = 0;
+
+        addStep({
+            tipo: 'oración',
+            titulo: 'Oración Introductoria',
+            contenido: `<p>Señor, envía tu Espíritu y abre mi corazón a Jesús.</p>`,
+            modalContenido: `Padre Celestial, en nombre de Tu Hijo Jesucristo, te pido que envíes sobre mí a tu Espíritu Santo, a fin de que mi corazón pueda prepararse a aceptar Tu presencia en Jesucristo. Tú nos enviaste a tu Hijo y Él es el Emmanuel, el Dios con nosotros. Jesús abre nuestros corazones, así como abriste los corazones de los discípulos de Emaús. Tú te uniste a ellos, caminaste a su lado como un extraño, pero también como alguien dispuesto a escuchar sus lamentaciones, para así poder abrir sus corazones y revelarte a ellos. Fue así como se derritió el hielo en sus corazones y ellos pudieron reconocerte. Jesús, aquí estoy delante de ti y te ruego, que hagas todo lo posible para que también mi corazón pueda reconocer tu Palabra en este momento y pueda abrirse a la oración y al encuentro contigo y con mis hermanos en el amor.<br><br>Amén.`,
+            bead: false
+        });
+        addStep({
+            tipo: 'pausa',
+            titulo: '(En silencio, presenta a Jesús tu propia situación y comienza a orar)',
+            contenido: '',
+            bead: false
+        });
+        addStep({ tipo: 'oración', titulo: 'señal de la cruz', contenido: 'Señal de la Cruz', bead: false });
+        addStep({ tipo: 'oración', titulo: 'credo', contenido: 'Credo', bead: false });
+
+        const mysteries = [
+            {
+                titulo: '🌅 primer misterio: "Jesús se acercó a ellos"',
+                extracto: 'Dice San Lucas: "Aquel mismo día dos discípulos se dirigían a un pueblecito llamado Emaús, que está a unos doce kilómetros de Jerusalén, e iban conversando sobre todo lo que había ocurrido. Mientras conversaban y discutían, Jesús en persona se les acercó y se puso a caminar con ellos, pero algo impedía que sus ojos lo reconocieran." (Lc 24, 13-16)',
+                contenido: `<p>Dice San Lucas:<br>
+                    "Aquel mismo día dos discípulos se dirigían a un pueblecito llamado Emaús, que está a unos doce kilómetros de Jerusalén, e iban conversando sobre todo lo que había ocurrido. Mientras conversaban y discutían, Jesús en persona se les acercó y se puso a caminar con ellos, pero algo impedía que sus ojos lo reconocieran." (Lc 24, 13-16)</p>
+                    <p>Gracias Jesús por no haber rechazado a los discípulos de Emaús.<br>
+                    Aunque ellos habían abandonado Jerusalén para regresar a sus casas, Tú los guiaste, no los dejaste solos.<br>
+                    Tú eres el viajero con los viajeros. Tú los entiendes y es por eso que te unes a ellos. ¡Gracias Señor!</p>
+                    <p>Jesús, en este momento cuestiono seriamente mi vida.<br>
+                    Tú eres también mi compañero de viaje, aun cuando pienso que no soy capaz de reconocer tu presencia.<br>
+                    Tú eres un verdadero compañero de viaje.<br>
+                    ¿Señor, podrías acercarte más a mí? Dime, ¿de qué debo conversar con los demás en mi camino?</p>
+                    <p>He de admitir que pocas veces hablo con otros de lo que te ocurrió, y muchas otras también mi conversación se convierte en una discusión, en el juicio que condena los errores que cometen las demás personas. ¡Perdóname Jesús!</p>
+                    <p>Ahora comprendo que en muchas ocasiones Tú me has guiado de lejos y que, al acercarte a mí, no has podido participar en mi conversación porque esta no era buena.<br>
+                    Con Jesús dame la fortaleza que necesito para que mi vida se llene del fruto del Amor.<br>
+                    Que todo momento, mi conversación esté acompañada por Ti, para que Tú siempre puedas participar de ella.<br>
+                    Que, de ahora en adelante, Tú seas el tema de mi conversación, mi camino y mi fe en el viaje.</p>
+                    <p>(Padre Nuestro, 10 Ave Marías, Gloria y "Oh Jesús mío" …)</p>`
+            },
+            {
+                titulo: '🌄 segundo misterio: "se detuvieron entristecidos"',
+                extracto: 'Dice San Lucas: "Jesús les dijo: «¿De qué van discutiendo por el camino?» Se detuvieron, y parecían muy entristecidos. Uno de ellos, llamado Cleofás, le contestó: «¿Cómo? ¿Eres tú el único peregrino en Jerusalén que no estás enterado de lo que ha pasado aquí estos días?» «¿Qué pasó?», les preguntó." (Lc 24, 17-19)',
+                contenido: `<p>Dice San Lucas:<br>
+                    "Jesús les dijo: «¿De qué van discutiendo por el camino?» Se detuvieron, y parecían muy entristecidos. Uno de ellos, llamado Cleofás, le contestó: «¿Cómo? ¿Eres tú el único peregrino en Jerusalén que no estás enterado de lo que ha pasado aquí estos días?» «¿Qué pasó?», les preguntó." (Lc 24, 17-19)</p>
+                    <p>Jesús, tu pregunta sorprendió a los dos viajeros.<br>
+                    Es evidente que ellos te amaban, por eso se sintieron heridos ante tu pregunta.<br>
+                    Fue como un extraño, no supieron nada acerca de lo sucedido.<br>
+                    Ni siquiera podían imaginar que Tú mismo, con tu resurrección, habías anulado la razón de su tristeza.<br>
+                    Gracias Jesús, porque Tú puedes y Tú quieres desaparecer la tristeza y la desilusión y deseas convertirlas en nueva esperanza.<br>
+                    Gracias Jesús, porque Tú haces que esto sea posible también para mí.</p>
+                    <p>Abre mis ojos Señor, para que sea capaz de reconocer los momentos en que pueda y deba yo ayudar a otros en Tu nombre.<br>
+                    Perdóname Jesús, porque muchas veces he huido de los que están tristes, muchas veces he tenido miedo de aceptar a aquellos que son despreciados por otros, muchas veces no me he acercado a quienes estaban deprimidos o no he reconciliado a aquellos que peleaban.<br>
+                    Perdóname Jesús y derrama en mí Tu divino Espíritu para poder ser tu compañero de viaje y tu paz para los que están tristes y que tienen problemas.<br>
+                    ¡Oh Jesús, quédate conmigo y así podré ser una persona nueva para mi prójimo en el camino de la vida!</p>
+                    <p>(Padre Nuestro, 10 Ave Marías, Gloria y "Oh Jesús mío" …)</p>`
+            },
+            {
+                titulo: '🌅 tercer misterio: "nosotros esperábamos…"',
+                extracto: 'Dice San Lucas: "Le contestaron: «Todo el asunto de Jesús Nazareno. Era un profeta poderoso en obras y palabras, reconocido por Dios y por todo el pueblo. Pero nuestros sumos sacerdotes y nuestros jefes renegaron de él, lo hicieron condenar a muerte y clavar en la cruz. Nosotros pensábamos que él sería el que debía libertar a Israel.»" (Lc 24, 19b-21)',
+                contenido: `<p>Dice San Lucas:<br>
+                    "Le contestaron: «Todo el asunto de Jesús Nazareno. Era un profeta poderoso en obras y palabras, reconocido por Dios y por todo el pueblo. Pero nuestros sumos sacerdotes y nuestros jefes renegaron de él, lo hicieron condenar a muerte y clavar en la cruz. Nosotros pensábamos que él sería el que debía libertar a Israel.»" (Lc 24, 19b-21)</p>
+                    <p>Jesús, los discípulos permanecieron junto a ti por largo tiempo.<br>
+                    Tú les hablaste acerca de la muerte y la resurrección, pero ellos no comprendieron nada.<br>
+                    Permanecieron ajenos, aún después de haber estado tan cerca de ti.<br>
+                    Se acabó todo en muerte.<br>
+                    Ellos te reconocían como un gran profeta en obras y palabras y por eso tuvieron esperanza.<br>
+                    Pero esa esperanza falló, porque no fue suficiente para hacerles comprender el significado de la Cruz, de la muerte, del sepulcro y de la resurrección.</p>
+                    <p>Jesús, Tú sabes que también mi fe es débil.<br>
+                    Por eso mi esperanza no es firme.<br>
+                    Despiértala en mí Señor, aumenta mi fe para que mi esperanza no siga siendo frágil.<br>
+                    Así seré capaz de decir con san Pablo: "yo sé bien en quién tengo puesta mi fe…" (2Tm 1, 12).<br>
+                    ¡Dame el don de tu Espíritu Santo!</p>
+                    <p>Te pido ahora Jesús, por todos los que están decepcionados de los demás.<br>
+                    Transforma a aquellas familias en las que los padres se han decepcionado de los hijos.<br>
+                    Tú bien sabes Jesús que las esperanzas no realizadas se convierten en causa de conflictos.<br>
+                    ¡Cámbianos a todos Señor y dirige tu esperanza!</p>
+                    <p>(Padre Nuestro, 10 Ave Marías, Gloria y "Oh Jesús mío" …)</p>`
+            },
+            {
+                titulo: '🌄 cuarto misterio: "¿no era necesario que padeciera?"',
+                extracto: 'Dice San Lucas: "Entonces él les dijo: «¡Qué poco entienden ustedes y qué lentos son sus corazones para creer todo lo que anunciaron los profetas! ¿No tenía que ser así y que el Mesías padeciera para entrar en su gloria?» Y les interpretó lo que se decía de él en todas las Escrituras, comenzando por Moisés y siguiendo por los profetas." (Lc 24, 25-27)',
+                contenido: `<p>Dice San Lucas:<br>
+                    "Entonces él les dijo: «¡Qué poco entienden ustedes y qué lentos son sus corazones para creer todo lo que anunciaron los profetas! ¿No tenía que ser así y que el Mesías padeciera para entrar en su gloria?» Y les interpretó lo que se decía de él en todas las Escrituras, comenzando por Moisés y siguiendo por los profetas." (Lc 24, 25-27)</p>
+                    <p>¡Oh Jesús, ni siquiera para ti fue fácil padecer!<br>
+                    Sin embargo, Tú habías anunciado que tendrías que sufrir. ¡Y cómo sufriste!<br>
+                    Pero Señor, ¿quién puede hacer entender a un inocente que otros inocentes tienen que sufrir?<br>
+                    ¿Quién hará comprender a los que han sido privados de sus derechos por medio de sus sufrimientos?<br>
+                    ¿Quién hará ver a los niños inocentes que han encontrado la muerte en el vientre de sus madres, que esto tenía que ser así?<br>
+                    Jesús, tú permaneces mudo ante las víctimas de la violencia, tú conviertes el destino de todos aquellos que sufren en la gloria de la resurrección.</p>
+                    <p>Permite Señor, que la cruz de todos aquellos que sufren florezca con la esperanza y la alegría de la resurrección, para que así puedan ser revestidos con la paz y alimentados con la leche y la miel de la nueva justicia.<br>
+                    Ayúdanos a todos a ser capaces de cargar con nuestra propia cruz como tú mismo lo hiciste: con amor, aun cuando no podamos entenderla.<br>
+                    María, Madre de todos los que sufren, no desvíes tus ojos en medio de su dolor, así como tampoco dejaste solo a tu Hijo.</p>
+                    <p>(Padre Nuestro, 10 Ave Marías, Gloria y "Oh Jesús mío" …)</p>`
+            },
+            {
+                titulo: '✝ quinto misterio: "¿no ardían nuestros corazones?"',
+                extracto: 'Dice San Lucas: "Al llegar cerca del pueblo al que iban, hizo como que quisiera seguir adelante, pero ellos le insistieron: Quédate con nosotros, porque ya está cayendo la tarde y se termina el día. Entró, pues, para quedarse con ellos. Y mientras estaba con ellos a la mesa, tomó el pan, pronunció la bendición, lo partió y se lo dio. En ese momento se les abrieron los ojos y lo reconocieron, pero él desapareció." (Lc 24, 28-32)',
+                contenido: `<p>Dice San Lucas:<br>
+                    "Al llegar cerca del pueblo al que iban, hizo como que quisiera seguir adelante, pero ellos le insistieron: Quédate con nosotros, porque ya está cayendo la tarde y se termina el día. Entró, pues, para quedarse con ellos. Y mientras estaba con ellos a la mesa, tomó el pan, pronunció la bendición, lo partió y se lo dio. En ese momento se les abrieron los ojos y lo reconocieron, pero él desapareció. Entonces se dijeron uno al otro: ¿No sentíamos arder nuestro corazón cuando nos hablaba en el camino y nos explicaba las Escrituras?" (Lc 24, 28-32)</p>
+                    <p>Jesús, en este misterio te pido por todos aquellos que proclaman tu Palabra.<br>
+                    Llénalos de tu Espíritu, inspira su palabra.<br>
+                    Enciende el fuego que calienta los corazones de aquellos que los tienen fríos,<br>
+                    que suavice los corazones de aquellos que son duros.<br>
+                    Haz que proclamen tu Palabra con poder para convertir a los corazones que maldicen<br>
+                    en corazones que te alaben y te glorifiquen,<br>
+                    a los corazones desesperados en corazones llenos de esperanza<br>
+                    y a los corazones desolados en corazones llenos de alegría.</p>
+                    <p>Te ruego especialmente por los mensajeros de tu Palabra que se sienten tristes y solos,<br>
+                    por aquellos que se preguntan por qué han sido llamados<br>
+                    y por aquellos que abandonan su vocación.<br>
+                    Por favor Jesús, da a todos los sacerdotes la gracia de celebrar la misa de tal manera,<br>
+                    que siempre te reconozcan en la Hostia.<br>
+                    Señor, te pido particularmente por todos aquellos que reciben la Sagrada Comunión,<br>
+                    para que puedan reconocerte y nunca olvidarte.</p>
+                    <p>(Padre Nuestro, 10 Ave Marías, Gloria y "Oh Jesús mío" …)</p>`
+            }
+        ];
+
+        mysteries.forEach(mystery => {
+            addStep({ tipo: 'misterio', titulo: mystery.titulo, contenido: mystery.contenido, extracto: mystery.extracto || '', bead: false });
+            addStep({ tipo: 'oración', titulo: 'Padre Nuestro...', contenido: 'Padre Nuestro...', bead: true, belongsToMystery: true });
+            for (let i = 1; i <= 10; i++) {
+                addStep({ tipo: 'ave maría...', titulo: `Ave María... ${i}`, contenido: 'Ave María...', bead: true, belongsToMystery: true });
+            }
+            addStep({ tipo: 'oración', titulo: 'Gloria', contenido: 'Gloria', bead: false, belongsToMystery: true });
+            addStep({ tipo: 'oración', titulo: 'Oración de Fátima: "Oh Jesús mío..."', contenido: 'Oración de Fátima: "Oh Jesús mío..." "Oh Jesús mío..."', bead: false, belongsToMystery: true });
+        });
+
+        addStep({
+            tipo: 'oración',
+            titulo: 'Oración Conclusiva',
+            contenido: 'Gracias Jesús por este encuentro. Amén.',
+            bead: false
+        });
+        addStep({ tipo: 'final', titulo: 'Rosario terminado', contenido: 'Has llegado al final del rosario.', bead: false });
+    }
+
+    buildSequence();
+
+    document.addEventListener('DOMContentLoaded', function () {
+
+        const beads = Array.from(document.querySelectorAll('.rosary-bead'));
+        const tipoMisterio = document.getElementById('tipo-misterio');
+        const titulo = document.getElementById('misterio-titulo');
+        const misterioActual = document.getElementById('misterio-actual');
+        const subtitulo = document.getElementById('misterio-subtitulo');
+        const indicators = document.getElementById('misterio-indicators');
+        const contenido = document.getElementById('misterio-contenido');
+        const previousBtn = document.getElementById('previousBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const progreso = document.getElementById('progreso');
+        const modalMystery = document.getElementById('modalMystery');
+        const modalMysteryBody = document.getElementById('modalMysteryBody');
+        const modalMysteryWrapper = document.querySelector('.modal-misterio-body');
+        const modalMysteryTitle = document.getElementById('modalMysteryTitle');
+        const closeModalMystery = document.getElementById('closeModalMystery');
+        const btnLeerMas = document.getElementById('btnLeerMas');
+
+        if (!titulo || !previousBtn || !nextBtn || !progreso || !modalMystery) return;
+
+        let currentIndex = 0;
+
+        function capitalizeDos(str) {
+            // Capitaliza solo la primera letra de cada palabra
+            return str.split(' ').map(function(word) {
+                return word.replace(/^([a-záéíóúüñ])/i, function(c) {
+                    return c.toUpperCase();
+                });
+            }).join(' ');
+        }
+
+        function openModal() {
+            const step = sequence[currentIndex];
+            if (!step) return;
+
+            let modalContent = '';
+            let modalTitle = '';
+
+            if (step.modalContenido) {
+                modalTitle = step.modalTitulo || step.titulo;
+                modalContent = step.modalContenido;
+            } else {
+                const mysteryIndex = getCurrentMysteryIndex(currentIndex);
+                const mysteryStep = mysteryIndex !== null ? sequence[mysteryIndex] : null;
+                if (mysteryStep && mysteryStep.tipo === 'misterio') {
+                    modalTitle = mysteryStep.titulo;
+                    modalContent = mysteryStep.contenido;
+                }
+            }
+
+            if (modalContent && modalMystery) {
+                modalMystery.classList.add('open');
+                if (modalMysteryTitle) modalMysteryTitle.textContent = capitalizeDos(modalTitle);
+                if (modalMysteryBody) modalMysteryBody.innerHTML = modalContent;
+                if (modalMysteryWrapper) modalMysteryWrapper.scrollTop = 0;
+            }
+        }
+
+        let beadTimer = null;
+        let lastBeadCount = 0;
+
+        function updateBeads() {
+            if (!beads.length) return;
+            const completedBeads = sequence.slice(0, currentIndex + 1).reduce((count, step) => count + (step.bead ? 1 : 0), 0);
+
+            // Si retrocedemos, actualizar directo sin animación
+            if (completedBeads <= lastBeadCount) {
+                if (beadTimer) { clearTimeout(beadTimer); beadTimer = null; }
+                beads.forEach((bead, index) => {
+                    bead.classList.toggle('active', index < completedBeads);
+                });
+                lastBeadCount = completedBeads;
+                return;
+            }
+
+            // Si avanzamos exactamente 1 bolita, encenderla directo
+            if (beadTimer) { clearTimeout(beadTimer); beadTimer = null; }
+            let i = lastBeadCount;
+            lastBeadCount = completedBeads;
+
+            function lightNext() {
+                if (i < completedBeads) {
+                    if (beads[i]) beads[i].classList.add('active');
+                    i++;
+                    beadTimer = setTimeout(lightNext, 80);
+                }
+            }
+            lightNext();
+        }
+
+        function getCurrentMysteryIndex(index) {
+            for (let i = index; i >= 0; i--) {
+                if (sequence[i] && sequence[i].tipo === 'misterio') {
+                    return i;
+                }
+            }
+            return null;
+        }
+
+        function renderIndicators() {
+            if (!indicators) return;
+            indicators.innerHTML = '';
+            const currentMysteryIndex = getCurrentMysteryIndex(currentIndex);
+            const visibleMysteries = sequence.filter(step => step.tipo === 'misterio');
+            visibleMysteries.forEach(step => {
+                const dot = document.createElement('span');
+                const stepIndex = sequence.indexOf(step);
+                dot.className = 'misterio-indicator' + (stepIndex === currentMysteryIndex ? ' active' : '');
+                dot.title = step.titulo;
+                indicators.appendChild(dot);
+            });
+        }
+
+        function hasModal(step) {
+            if (step.tipo === 'final') return false;
+            if (step.modalContenido) return true;
+            const mysteryIndex = getCurrentMysteryIndex(currentIndex);
+            const mysteryStep = mysteryIndex !== null ? sequence[mysteryIndex] : null;
+            return !!(mysteryStep && mysteryStep.tipo === 'misterio');
+        }
+
+        function renderMystery() {
+            if (!sequence.length) return;
+            const step = sequence[currentIndex];
+            if (!step) return;
+
+            const currentMysteryIndex = getCurrentMysteryIndex(currentIndex);
+            const currentMystery = currentMysteryIndex !== null && step.belongsToMystery ? sequence[currentMysteryIndex] : null;
+
+            // Mostrar tipo solo si no repite lo que ya dice el título
+            const tituloTexto = currentMystery ? currentMystery.titulo : step.titulo;
+            const tipoTexto = step.tipo;
+            if (tipoMisterio) {
+                if (step.tipo === 'pausa' || tituloTexto.toLowerCase().startsWith(tipoTexto.toLowerCase())) {
+                    tipoMisterio.style.display = 'none';
+                } else {
+                    tipoMisterio.style.display = 'inline-block';
+                    tipoMisterio.textContent = tipoTexto;
+                }
+            }
+            if (titulo) {
+                titulo.textContent = tituloTexto;
+                if (step.tipo === 'pausa') {
+                    titulo.style.fontStyle = 'italic';
+                    titulo.style.fontSize = '0.95rem';
+                    titulo.style.color = '#f0e4b8';
+                    titulo.style.textAlign = 'center';
+                } else {
+                    titulo.style.fontStyle = '';
+                    titulo.style.fontSize = '';
+                    titulo.style.color = '#f5d57f';
+                    titulo.style.textAlign = '';
+                }
+            }
+            if (misterioActual) misterioActual.textContent = step.belongsToMystery ? step.titulo : '';
+            // Mostrar extracto del misterio o nota de la oración introductoria
+            if (subtitulo) {
+                if (step.tipo === 'misterio' && step.extracto) {
+                    subtitulo.textContent = step.extracto;
+                    subtitulo.style.fontStyle = 'italic';
+                    subtitulo.style.fontSize = '0.82rem';
+                    subtitulo.style.color = '#e9e4d8';
+                    subtitulo.style.lineHeight = '1.6';
+                    subtitulo.style.marginTop = '8px';
+                } else if (step.nota) {
+                    subtitulo.textContent = step.nota;
+                    subtitulo.style.fontStyle = 'italic';
+                    subtitulo.style.fontSize = '0.85rem';
+                    subtitulo.style.color = '#f0e4b8';
+                    subtitulo.style.lineHeight = '1.5';
+                    subtitulo.style.marginTop = '6px';
+                } else {
+                    subtitulo.textContent = '';
+                    subtitulo.style.fontStyle = '';
+                }
+            }
+            if (progreso) progreso.textContent = `Paso ${currentIndex + 1} de ${sequence.length}`;
+
+            if (contenido) {
+                contenido.style.display = 'none';
+                contenido.innerHTML = '';
+            }
+
+            // Mostrar u ocultar botón Leer más
+            if (btnLeerMas) {
+                if (hasModal(step)) {
+                    btnLeerMas.style.display = 'inline-block';
+                } else {
+                    btnLeerMas.style.display = 'none';
+                }
+            }
+
+            const smallContentSteps = ['señal de la cruz', 'credo', 'padre nuestro', 'gloria'];
+
+            if (contenido) {
+                if (step.tipo === 'ave maría' || smallContentSteps.includes(step.titulo.toLowerCase())) {
+                    contenido.style.minHeight = '120px';
+                    contenido.style.maxHeight = '220px';
+                } else {
+                    contenido.style.minHeight = '';
+                    contenido.style.maxHeight = '';
+                }
+            }
+
+            if (previousBtn) previousBtn.disabled = currentIndex === 0;
+            if (nextBtn) nextBtn.textContent = currentIndex === sequence.length - 1 ? 'Reiniciar' : 'Siguiente';
+
+            updateBeads();
+            renderIndicators();
+        }
+
+        // Botón Leer más abre el modal
+        if (btnLeerMas) {
+            btnLeerMas.addEventListener('click', openModal);
+        }
+
+        if (closeModalMystery) {
+            closeModalMystery.addEventListener('click', () => {
+                if (modalMystery) modalMystery.classList.remove('open');
+            });
+        }
+
+        if (modalMystery) {
+            modalMystery.addEventListener('click', (event) => {
+                if (event.target === modalMystery) {
+                    modalMystery.classList.remove('open');
+                }
+            });
+        }
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modalMystery) {
+                modalMystery.classList.remove('open');
+            }
+        });
+
+        if (previousBtn) {
+            previousBtn.addEventListener('click', () => {
+                if (currentIndex > 0) {
+                    currentIndex -= 1;
+                    renderMystery();
+                }
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                if (currentIndex < sequence.length - 1) {
+                    currentIndex += 1;
+                } else {
+                    currentIndex = 0;
+                }
+                renderMystery();
+            });
+        }
+
+        renderMystery();
+
+        const fondo = document.body && document.body.dataset.fondo;
+        if (fondo) {
+            document.body.style.backgroundImage = `url('${fondo}')`;
+        }
+
+    });
+</script>
+</body>
+</html>

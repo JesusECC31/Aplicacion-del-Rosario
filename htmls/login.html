@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ingreso</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+
+        .corner-image {
+            position: absolute;
+            width: 90px;
+            max-width: 90px;
+            opacity: 0.92;
+            object-fit: cover;
+            background: none;
+            border-radius: 0;
+            box-shadow: none;
+            z-index: 0;
+        }
+
+        .left-image  { right: 12px; bottom: 12px; }
+        .right-image { left: 12px; bottom: 12px; width: 70px; max-width: 70px; }
+        .center-image {
+            left: 50%;
+            bottom: 12px;
+            transform: translateX(-50%);
+            width: 90px;
+            max-width: 90px;
+        }
+
+        /* CARD — mismos valores exactos que .boton-nuevo del home */
+        .card {
+            position: relative;
+            z-index: 9999;
+            width: 85%;
+            max-width: 300px;
+            padding: 22px 20px 20px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(5px);
+            text-align: center;
+        }
+
+        .card h1 {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.7);
+            margin: 0 0 4px;
+        }
+
+        .card p {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.7);
+            margin: 0 0 18px;
+        }
+
+        /* Flash messages */
+        .flash-message {
+            font-size: 13px;
+            padding: 7px 10px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            color: white;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Input — mismo look que el card */
+        .card input[type="password"] {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.12);
+            color: white;
+            outline: none;
+            backdrop-filter: blur(5px);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.35);
+            transition: background 0.2s ease, border-color 0.2s ease;
+            font-weight: 600;
+        }
+
+        .card input[type="password"]::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 400;
+        }
+
+        .card input[type="password"]:focus {
+            background: rgba(255, 255, 255, 0.20);
+            border-color: rgba(255, 255, 255, 0.45);
+        }
+    </style>
+</head>
+
+<body data-fondo="{{ url_for('static', filename=fondo) }}">
+
+<img src="{{ url_for('static', filename='fondos/imagen1.png') }}" class="corner-image left-image" alt="">
+<img src="{{ url_for('static', filename='fondos/imagen3.png') }}" class="corner-image right-image" alt="">
+<img src="{{ url_for('static', filename='fondos/imagen2.png') }}" class="corner-image center-image" alt="">
+
+<div class="card">
+    <h1>Bienvenido</h1>
+    <p>Ingresa la contraseña</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, msg in messages %}
+                <div class="flash-message {{ category }}">{{ msg }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <form id="loginForm" method="POST">
+        <input type="password" id="password" name="password" placeholder="Contraseña" maxlength="11" autocomplete="current-password">
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var fondo = document.body && document.body.dataset.fondo;
+        if (fondo) {
+            document.body.style.backgroundImage = "url('" + fondo + "')";
+        }
+
+        var passwordInput = document.getElementById('password');
+        var loginForm = document.getElementById('loginForm');
+        var targetPassword = 'Emaus3132';
+        var maxLength = 11;
+
+        if (!passwordInput || !loginForm) return;
+
+        passwordInput.addEventListener('input', function () {
+            var val = passwordInput.value;
+            if (val === targetPassword) {
+                loginForm.submit();
+                return;
+            }
+            if (val.length >= maxLength) {
+                passwordInput.value = val.slice(0, maxLength);
+                loginForm.submit();
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

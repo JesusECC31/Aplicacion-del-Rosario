@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Oraciones del Rosario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='estilos.css') }}">
+</head>
+
+<body class="fondo-oraciones">
+
+<style>
+    .fondo-oraciones {
+        background-image: url("{{ url_for('static', filename='fondos/imagen_misericordia.jpg') }}");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        min-height: 100vh;
+        color: white;
+        padding: 16px 12px;
+    }
+
+    .rosario-panel {
+        position: relative;
+    }
+
+    .inicio-flecha {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 1;
+    }
+
+    #oracion-titulo {
+        font-size: clamp(1.8rem, 4vw, 2.2rem);
+        margin-bottom: 14px;
+        text-align: center;
+        color: #f5d57f;
+    }
+
+    #oracion-texto {
+        font-size: clamp(1.05rem, 2.6vw, 1.35rem);
+        line-height: 1.95;
+        margin-bottom: 24px;
+        max-width: 900px;
+    }
+
+    .rosario-controles {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        width: 100%;
+        max-width: 360px;
+        margin: 18px auto 0;
+        flex-wrap: nowrap;
+    }
+
+    .boton-accion {
+        width: auto;
+        min-width: 70px;
+        max-width: 110px;
+        padding: 7px 10px;
+        font-size: 0.85rem;
+        border-radius: 10px;
+    }
+
+    .boton-cerrar {
+        width: 34px;
+        height: 34px;
+        padding: 0;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(0,0,0,0.35);
+        border: 1px solid rgba(255,255,255,0.25);
+        border-radius: 8px;
+        cursor: pointer;
+        opacity: 0.8;
+        transition: transform 0.18s ease, background 0.18s ease, opacity 0.18s ease;
+        text-decoration: none;
+        color: white;
+    }
+
+    .boton-cerrar:hover {
+        opacity: 1;
+        background: rgba(255,255,255,0.18);
+        transform: scale(1.05);
+    }
+
+    .boton-cerrar svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .boton-accion:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 760px) {
+        .fondo-oraciones {
+            background-attachment: scroll;
+        }
+
+        #oracion-titulo {
+            font-size: 1.8rem;
+        }
+
+        #oracion-texto {
+            font-size: 1.15rem;
+            padding: 0 8px;
+        }
+    }
+</style>
+
+<div class="rosario-panel">
+    <a href="/home" class="boton-cerrar inicio-flecha" aria-label="Volver al inicio">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6" />
+        </svg>
+    </a>
+    <header style="text-align:center; padding-bottom: 10px;">
+        <h2>Oraciones del Rosario</h2>
+    </header>
+
+    <div class="misterio-card">
+        <h3 id="oracion-titulo">Señal de la Cruz</h3>
+        <p id="oracion-texto">
+            Por la señal de la Santa Cruz,<br>
+            de nuestros enemigos líbranos Señor, Dios nuestro.<br>
+            En el nombre del Padre, y del Hijo, y del Espíritu Santo. Amén.
+        </p>
+    </div>
+
+    <div class="rosario-controles">
+        <button id="previousBtn" class="boton boton-accion" disabled>Anterior</button>
+        <button id="siguienteBtn" class="boton boton-accion">Siguiente</button>
+    </div>
+</div>
+
+<script>
+    var oraciones = [
+        {
+            titulo: "Señal de la Cruz",
+            texto: "Por la señal de la Santa Cruz,<br>de nuestros enemigos líbranos Señor, Dios nuestro.<br>En el nombre del Padre, y del Hijo, y del Espíritu Santo. Amén."
+        },
+        {
+            titulo: "Credo",
+            texto: "Creo en Dios, Padre todopoderoso,<br>Creador del cielo y de la tierra.<br>Creo en Jesucristo, su único Hijo, nuestro Señor,<br>que fue concebido por obra y gracia del Espíritu Santo,<br>nació de Santa María Virgen,<br>padeció bajo el poder de Poncio Pilato, fue crucificado,<br>murió y fue sepultado,<br>descendió a los infiernos,<br>al tercer día resucitó de entre los muertos,<br>subió a los cielos<br>y está sentado a la derecha de Dios, Padre todopoderoso.<br>Desde allí ha de venir a juzgar a vivos y muertos.<br>Creo en el Espíritu Santo,<br>la Santa Iglesia Católica,<br>la comunión de los santos,<br>el perdón de los pecados,<br>la resurrección de la carne<br>y la vida eterna. Amén."
+        },
+        {
+            titulo: "Padre Nuestro",
+            texto: "Padre nuestro, que estás en el cielo,<br>santificado sea tu Nombre;<br>venga a nosotros tu Reino;<br>hágase tu voluntad en la tierra como en el cielo.<br>Danos hoy nuestro pan de cada día;<br>perdona nuestras ofensas,<br>como también nosotros perdonamos a los que nos ofenden;<br>no nos dejes caer en la tentación<br>y líbranos del mal. Amén."
+        },
+        {
+            titulo: "Ave María",
+            texto: "Dios te salve, María,<br>llena eres de gracia;<br>el Señor es contigo;<br>bendita tú eres entre todas las mujeres,<br>y bendito es el fruto de tu vientre, Jesús.<br>Santa María, Madre de Dios,<br>ruega por nosotros, pecadores,<br>ahora y en la hora de nuestra muerte. Amén."
+        },
+        {
+            titulo: "Gloria",
+            texto: "Gloria al Padre, y al Hijo, y al Espíritu Santo.<br>Como era en el principio, ahora y siempre,<br>por los siglos de los siglos. Amén."
+        },
+        {
+            titulo: "Oración de Fátima",
+            texto: "Oh Jesús mío, perdona nuestros pecados,<br>líbranos del fuego del infierno, lleva al cielo a<br>todas las almas, especialmente a las más<br>necesitadas de tu misericordia. Amén."
+        },
+        {
+            titulo: "Salve",
+            texto: "Dios te salve, Reina y Madre de misericordia,<br>vida, dulzura y esperanza nuestra; Dios te salve.<br>A ti llamamos los desterrados hijos de Eva;<br>a ti suspiramos, gimiendo y llorando en este valle de lágrimas.<br>Ea, pues, Señora, abogada nuestra,<br>vuelve a nosotros esos tus ojos misericordiosos;<br>y después de este destierro, muéstranos a Jesús,<br>fruto bendito de tu vientre.<br>¡Oh clemente! ¡Oh piadosa!<br>¡Oh dulce Virgen María!<br>Ruega por nosotros, Santa Madre de Dios,<br>para que seamos dignos de alcanzar<br>las promesas de nuestro Señor Jesucristo. Amén."
+        }
+    ];
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var currentStep = 0;
+
+        var titulo = document.getElementById('oracion-titulo');
+        var texto = document.getElementById('oracion-texto');
+        var previousBtn = document.getElementById('previousBtn');
+        var siguienteBtn = document.getElementById('siguienteBtn');
+
+        if (!titulo || !texto || !previousBtn || !siguienteBtn) return;
+
+        function updateOracion() {
+            titulo.textContent = oraciones[currentStep].titulo;
+            texto.innerHTML = oraciones[currentStep].texto;
+            previousBtn.disabled = currentStep === 0;
+            siguienteBtn.textContent = currentStep === oraciones.length - 1 ? 'Reiniciar' : 'Siguiente';
+        }
+
+        previousBtn.addEventListener('click', function () {
+            if (currentStep > 0) {
+                currentStep--;
+                updateOracion();
+            }
+        });
+
+        siguienteBtn.addEventListener('click', function () {
+            if (currentStep < oraciones.length - 1) {
+                currentStep++;
+            } else {
+                currentStep = 0;
+            }
+            updateOracion();
+        });
+
+        updateOracion();
+    });
+</script>
+
+</body>
+</html>
