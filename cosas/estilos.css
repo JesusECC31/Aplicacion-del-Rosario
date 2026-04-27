@@ -1,0 +1,817 @@
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", Arial, sans-serif !important;
+    font-weight: 700 !important;
+}
+
+body,
+body * {
+    text-transform: none !important;
+}
+
+body {
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    min-height: 100vh;
+    color: white;
+    padding: 16px 12px;
+}
+
+.page-inner {
+    width: min(100%, 1120px);
+    margin: 0 auto;
+}
+
+
+.card {
+    width: min(100%, 460px);
+    margin: 0 auto;
+    padding: 24px 22px;
+    border-radius: 18px;
+    background: rgba(10, 12, 18, 0.65);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(8px);
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.28);
+}
+
+.card h2 {
+    font-size: clamp(1.75rem, 2.2vw, 2rem);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.card p {
+    margin-bottom: 22px;
+    line-height: 1.6;
+    color: #e9e9e9;
+    text-align: center;
+}
+
+.card form {
+    display: grid;
+    gap: 14px;
+}
+
+.card input[type="text"],
+.card input[type="password"] {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    outline: none;
+    font-size: 1rem;
+}
+
+.card input[type="text"]::placeholder,
+.card input[type="password"]::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.card a {
+    text-decoration: none;
+    display: block;
+}
+
+.card a button {
+    width: 100%;
+}
+
+.boton {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: none;
+    background: rgba(255, 255, 255, 0.18);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.18s ease, background 0.18s ease;
+    text-decoration: none;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.boton:hover {
+    background: rgba(255, 255, 255, 0.28);
+    transform: translateY(-1px);
+}
+
+.boton:focus-visible {
+    outline: 2px solid rgba(255, 255, 255, 0.85);
+    outline-offset: 2px;
+}
+
+.rosario-panel {
+    width: min(100%, 920px);
+    margin: 24px auto 0;
+    padding: 24px 24px;
+    border-radius: 24px;
+    background: rgba(2, 8, 18, 0.45);
+    border: 1px solid rgba(245, 213, 127, 0.22);
+    backdrop-filter: blur(10px);
+}
+
+.rosario-panel h2 {
+    margin-bottom: 10px;
+    font-size: clamp(1.8rem, 2.4vw, 2.2rem);
+    text-align: center;
+    color: #f5d57f;
+}
+
+.rosario-intro p {
+    color: #e9e4d8;
+    line-height: 1.8;
+    margin-bottom: 14px;
+}
+
+.rosario-section {
+    margin-top: 18px;
+    border: 1px solid rgba(245, 213, 127, 0.2);
+    border-radius: 18px;
+    background: rgba(11, 9, 7, 0.55);
+    overflow: hidden;
+}
+
+.rosario-section summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 16px 20px;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #f5d57f;
+    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid rgba(245, 213, 127, 0.12);
+    transition: background 0.2s ease;
+}
+
+.rosario-section summary:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.rosario-section summary::-webkit-details-marker {
+    display: none;
+}
+
+.section-content {
+    padding: 16px 20px 20px;
+    color: #e9e4d8;
+    line-height: 1.75;
+    font-size: 1.08rem;
+}
+
+.section-content p {
+    margin-bottom: 14px;
+}
+
+.misterio-card {
+    margin-top: 12px;
+    padding: 14px;
+    border-radius: 20px;
+    background: rgba(20, 16, 11, 0.68);
+    border: 1px solid rgba(245, 213, 127, 0.22);
+    box-shadow: inset 0 1px 6px rgba(0, 0, 0, 0.18);
+}
+
+.misterio-card h3 {
+    font-size: clamp(1.1rem, 2.2vw, 1.4rem);
+    margin-bottom: 8px;
+}
+
+.misterio-card p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 8px;
+}
+
+.misterio-selector {
+    margin-bottom: 18px;
+    text-align: center;
+}
+
+.misterio-selector label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    color: #f5d57f;
+    font-weight: 600;
+}
+
+.misterio-selector select {
+    width: 100%;
+    max-width: 300px;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(245, 213, 127, 0.3);
+    background: rgba(20, 16, 11, 0.88);
+    color: #f5d57f;
+    font-size: 1rem;
+    outline: none;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.25);
+}
+
+.misterio-selector select:focus {
+    border-color: #f5d57f;
+    box-shadow: 0 0 10px rgba(245, 213, 127, 0.25);
+}
+
+.custom-dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    max-width: 300px;
+    cursor: pointer;
+}
+
+.dropdown-selected {
+    padding: 10px 35px 10px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(245, 213, 127, 0.3);
+    background: rgba(20, 16, 11, 0.88);
+    color: #f5d57f;
+    font-size: 1rem;
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.25);
+    transition: border-color 0.3s;
+}
+
+.dropdown-selected:hover {
+    border-color: #f5d57f;
+}
+
+.dropdown-arrow {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    color: #f5d57f;
+    font-size: 12px;
+    pointer-events: none;
+    transition: transform 0.3s;
+}
+
+.custom-dropdown.open .dropdown-arrow {
+    transform: translateY(-50%) rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: rgba(20, 16, 11, 0.95);
+    border: 1px solid rgba(245, 213, 127, 0.3);
+    border-radius: 12px;
+    margin-top: 2px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    display: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+@media (max-width: 760px) {
+    body,
+    .fondo-oraciones {
+        background-attachment: scroll;
+    }
+
+    .card {
+        padding: 18px;
+    }
+
+    .boton,
+    .boton-nuevo {
+        font-size: 1rem;
+    }
+
+    .rosario-panel {
+        padding: 18px 18px 24px;
+    }
+
+    .rosario-section summary {
+        font-size: 1.05rem;
+    }
+
+    .section-content {
+        font-size: 1.02rem;
+    }
+
+    .misterio-card h3 {
+        font-size: 1.35rem;
+    }
+
+    .misterio-card p {
+        font-size: 1.08rem;
+    }
+}
+
+.custom-dropdown.open .dropdown-options {
+    display: block;
+}
+
+.dropdown-options li {
+    padding: 10px 12px;
+    color: #f5d57f;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dropdown-options li:hover {
+    background: rgba(245, 213, 127, 0.2);
+}
+
+.flash-message {
+    max-width: 300px;
+    margin: 0 auto 16px auto;
+    padding: 12px 14px;
+    border-radius: 14px;
+    text-align: center;
+    font-weight: 600;
+}
+
+.flash-message.success {
+    background: rgba(100, 120, 80, 0.25);
+    color: #b8e6b8;
+    border: 1px solid rgba(150, 200, 120, 0.45);
+}
+
+.flash-message.error {
+    background: rgba(255, 120, 120, 0.18);
+    color: #ffe8d6;
+    border: 1px solid rgba(255, 160, 120, 0.35);
+}
+
+.card form button,
+.card a button {
+    margin-top: 12px;
+}
+
+.misterio-card h3 {
+    font-size: 1rem;
+    color: #f5d57f;
+    margin-bottom: 8px;
+}
+
+.tipo-misterio {
+    color: #f5d57f;
+    font-weight: bold;
+    font-size: 0.95rem;
+}
+
+.misterio-card p {
+    color: #e9e4d8;
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin-bottom: 8px;
+}
+
+.rosary-necklace {
+    width: min(100%, 340px);
+    aspect-ratio: 1 / 1;
+    margin: 20px auto 0;
+    position: relative;
+    padding: 8px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, rgba(255, 243, 208, 0.045), rgba(6, 4, 2, 0.82));
+    box-shadow: inset 0 0 30px rgba(255, 230, 160, 0.05), 0 20px 40px rgba(0, 0, 0, 0.28);
+    border: 1px solid rgba(245, 213, 127, 0.16);
+}
+
+.rosary-inner-glow {
+    position: absolute;
+    inset: 20%;
+    border-radius: 50%;
+    background: rgba(255, 235, 175, 0.06);
+    box-shadow: inset 0 0 40px rgba(255, 216, 120, 0.12);
+}
+
+.rosary-bead {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.2);
+    transform-origin: 0 0;
+    transform: rotate(calc(var(--i) * 6.545454545deg)) translate(130px) translate(-50%, -50%);
+    transition: transform 0.25s ease, background 0.25s ease, box-shadow 0.25s ease, width 0.25s ease, height 0.25s ease;
+}
+
+.rosary-bead.active {
+    background: radial-gradient(circle, #ffe8ac 0%, #b67630 85%);
+    border-color: #f4d18f;
+    box-shadow: 0 0 20px rgba(255, 204, 112, 0.7);
+    transform: rotate(calc(var(--i) * 6.545454545deg)) translate(130px) translate(-50%, -50%);
+}
+
+.rosary-bead.large.active {
+    background: radial-gradient(circle, #ffe8ac 0%, #d18219 85%);
+    border-color: #f8d06b;
+    box-shadow: 0 0 28px rgba(255, 193, 82, 0.85);
+}
+
+.rosary-bead.large {
+    width: 16px;
+    height: 16px;
+}
+
+.rosary-center {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 60px;
+    height: 60px;
+    transform: translate(-50%, -50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.rosary-cross {
+    position: relative;
+    width: 16px;
+    height: 36px;
+}
+
+.rosary-cross span {
+    position: absolute;
+    left: 50%;
+    background: linear-gradient(180deg, rgba(255, 241, 197, 1), rgba(161, 109, 45, 1));
+    border-radius: 4px;
+    box-shadow: 0 0 14px rgba(255, 232, 165, 0.45);
+}
+
+.rosary-cross span:first-child {
+    width: 8px;
+    height: 100%;
+    transform: translateX(-50%);
+}
+
+.rosary-cross span:last-child {
+    width: 18px;
+    height: 6px;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.rosario-controles {
+    margin-top: 22px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.boton-accion {
+    min-width: 120px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    border: 1px solid rgba(245, 213, 127, 0.3);
+    background: rgba(245, 213, 127, 0.18);
+    color: white;
+    font-weight: 700;
+}
+
+.boton-accion:hover {
+    background: rgba(245, 213, 127, 0.28);
+}
+
+.progreso {
+    display: none;
+}
+
+@media (max-width: 720px) {
+    .rosario-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .cuenta {
+        width: 12px;
+        height: 12px;
+    }
+
+    .rosario-panel {
+        padding: 20px 16px;
+    }
+
+    .rosario-panel h2 {
+        font-size: 1.6rem;
+    }
+
+    .misterio-card {
+        padding: 14px;
+    }
+
+    .misterio-card h3 {
+        font-size: 1.2rem;
+    }
+
+    .tipo-misterio {
+        font-size: 1rem;
+    }
+
+    .misterio-card p {
+        font-size: 0.85rem;
+        line-height: 1.6;
+    }
+
+    .misterio-selector label {
+        font-size: 0.9rem;
+    }
+
+    .dropdown-selected {
+        font-size: 0.9rem;
+    }
+
+    .dropdown-options li {
+        font-size: 0.9rem;
+    }
+
+    .progreso {
+        font-size: 0.9rem;
+    }
+
+    .boton-accion {
+        min-width: 100px;
+        font-size: 0.85rem;
+        padding: 10px 14px;
+    }
+
+    .rosary-necklace {
+        width: min(100%, 350px);
+        padding: 10px;
+    }
+
+    .rosary-bead {
+        width: 10px;
+        height: 10px;
+        transform: rotate(calc(var(--i) * 6.545454545deg)) translate(140px) translate(-50%, -50%);
+    }
+
+    .rosary-bead.large {
+        width: 16px;
+        height: 16px;
+    }
+
+    .rosary-bead.large.active {
+        background: radial-gradient(circle, #ffe8ac 0%, #d18219 85%);
+        border-color: #f8d06b;
+        box-shadow: 0 0 28px rgba(255, 193, 82, 0.85);
+    }
+
+    .rosary-bead.active {
+        transform: rotate(calc(var(--i) * 6.545454545deg)) translate(140px) translate(-50%, -50%);
+    }
+
+    .rosary-center {
+        width: 50px;
+        height: 50px;
+    }
+
+    .rosary-cross {
+        width: 12px;
+        height: 28px;
+    }
+
+    .rosary-cross span:first-child {
+        width: 6px;
+    }
+
+    .rosary-cross span:last-child {
+        width: 14px;
+        height: 5px;
+    }
+}
+
+.menu-inferior {
+    width: min(100%, 460px);
+    margin: 24px auto 0;
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.45);
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(12px);
+}
+
+.menu-inferior a {
+    flex: 1;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.menu-inferior svg {
+    width: 24px;
+    height: 24px;
+}
+
+
+h1, h2, h3, p {
+    color: white;
+}
+
+@media (max-width: 640px) {
+    body {
+        padding: 12px 10px 20px;
+    }
+
+    .card {
+        width: 100%;
+        padding: 20px 18px;
+    }
+
+    .card h2 {
+        font-size: 1.75rem;
+    }
+
+    .card p {
+        font-size: 0.98rem;
+    }
+
+    .boton,
+    .boton-nuevo {
+        font-size: 0.98rem;
+        padding: 14px 14px;
+    }
+
+    .boton-nuevo {
+        width: 100%;
+    }
+
+    .pergamino {
+        margin: 12px 10px;
+        padding: 16px;
+    }
+
+    .menu-inferior {
+        padding: 10px 8px;
+        gap: 8px;
+    }
+
+    .menu-inferior a {
+        padding: 10px;
+    }
+}
+
+
+header h1 {
+    font-size: 24px;
+    font-weight: bold;
+    text-shadow: 0 0 10px rgba(0,0,0,0.7);
+    margin-bottom: 5px;
+}
+
+
+.boton-cerrar {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    padding: 6px 12px;
+    background: rgba(0,0,0,0.45);
+    border: 1px solid rgba(255,255,255,0.35);
+    border-radius: 8px;
+    font-size: 13px;
+    color: white;
+    text-decoration: none;
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    transition: 0.2s ease;
+}
+
+.boton-cerrar:hover {
+    background: rgba(255,255,255,0.20);
+    transform: scale(1.05);
+}
+
+.pergamino {
+    background-image: url('https://i.imgur.com/4m4p4yC.png');
+    background-color: rgba(255, 250, 230, 0.94);
+    background-blend-mode: screen;
+    background-size: cover;
+    background-position: center;
+    padding: 24px 22px;
+    border-radius: 22px;
+    margin: 15px 16px;
+    box-shadow: 0 18px 45px rgba(0,0,0,0.28);
+    border: 1px solid rgba(206, 171, 94, 0.4);
+    color: #3f2f18;
+    backdrop-filter: blur(4px);
+    max-width: 760px;
+    margin-inline: auto;
+}
+
+.pergamino h3 {
+    font-size: 1.15rem;
+    margin-bottom: 12px;
+    text-align: center;
+    color: #624818;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-shadow: 0 0 2px rgba(255,255,255,0.5);
+}
+
+.pergamino p {
+    font-size: 1rem;
+    line-height: 1.8;
+    text-align: center;
+    color: #48361f;
+    font-weight: 600;
+    text-shadow: 0 0 1px rgba(255,255,255,0.2);
+}
+
+
+.boton-nuevo {
+    width: 85%;
+    margin: 0 auto 14px auto;
+    padding: 12px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    display: block;
+    text-align: center;
+    backdrop-filter: blur(5px);
+    text-decoration: none;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.35);
+    transition: transform .15s ease, background .2s ease;
+}
+
+.boton-nuevo:hover {
+    transform: scale(1.03);
+    background: rgba(255,255,255,0.20);
+}
+
+
+@media (max-width: 480px) {
+    .rosario-panel {
+        padding: 16px 12px;
+    }
+
+    .rosario-panel h2 {
+        font-size: 1.4rem;
+    }
+
+    .misterio-card {
+        padding: 12px;
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+
+    .misterio-card h3 {
+        font-size: 1.1rem;
+    }
+
+    .misterio-card p {
+        font-size: 0.75rem;
+        max-height: 50vh;
+        overflow-y: auto;
+    }
+
+    .boton-accion {
+        min-width: 80px;
+        font-size: 0.75rem;
+        padding: 8px 10px;
+    }
+}
+
+
+.firma {
+    position: fixed;
+    bottom: 12px;
+    right: 12px;
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.32);
+    opacity: 0.5;
+    letter-spacing: 0.05em;
+    pointer-events: none;
+    user-select: none;
+    z-index: 10;
+}
+
+
+.contenedor-home {
+    padding: 10px 0 30px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
