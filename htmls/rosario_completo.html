@@ -22,6 +22,7 @@
             background: rgba(0, 0, 0, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(8px);
+            padding-bottom: 80px;
         }
 
         .rosario-header {
@@ -164,7 +165,7 @@
 
         .rosario-panel {
             position: relative;
-            padding: 18px 16px;
+            padding: 18px 16px 80px;
             max-width: 920px;
             margin: 0 auto;
         }
@@ -180,7 +181,6 @@
             padding-top: 16px;
         }
 
-        /* Collar más alto para no solapar la card de arriba */
         .misterio-card {
             padding: 8px 10px;
             width: min(100%, 520px);
@@ -261,7 +261,6 @@
                 0 0 0 1px rgba(245, 213, 127, 0.08) inset;
         }
 
-        /* Línea dorada decorativa en la parte superior del modal */
         .modal-misterio-content::before {
             content: '';
             position: absolute;
@@ -279,19 +278,9 @@
             padding-right: 4px;
         }
 
-        .modal-misterio-body::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .modal-misterio-body::-webkit-scrollbar-track {
-            background: rgba(255,255,255,0.05);
-            border-radius: 4px;
-        }
-
-        .modal-misterio-body::-webkit-scrollbar-thumb {
-            background: rgba(245, 213, 127, 0.3);
-            border-radius: 4px;
-        }
+        .modal-misterio-body::-webkit-scrollbar { width: 4px; }
+        .modal-misterio-body::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); border-radius: 4px; }
+        .modal-misterio-body::-webkit-scrollbar-thumb { background: rgba(245, 213, 127, 0.3); border-radius: 4px; }
 
         .modal-misterio-close {
             position: absolute;
@@ -353,33 +342,11 @@
             line-height: 1.85;
         }
 
-        .boton {
-            font-size: 0.88rem;
-            padding: 8px 10px;
-        }
-
-        .boton-accion {
-            width: auto;
-            min-width: 70px;
-            max-width: 110px;
-            padding: 7px 10px;
-            font-size: 0.85rem;
-            border-radius: 10px;
-        }
-
-        .rosario-controles {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            max-width: 360px;
-            margin: 10px auto 0;
-            flex-wrap: nowrap;
-        }
-
+        /* Progreso centrado */
         .progreso {
             font-size: 0.9rem;
+            text-align: center;
+            margin-top: 10px;
         }
 
         .boton-final {
@@ -420,15 +387,54 @@
             display: inline-flex;
         }
 
-        /* Collar separado para no tapar nada */
+        /* Collar */
         .rosary-necklace {
             margin-top: 40px;
             margin-bottom: 40px;
         }
 
+        /* ── BOTONES FLOTANTES ── */
+        .boton-flotante {
+            position: fixed;
+            bottom: 24px;
+            z-index: 1000;
+            padding: 12px 22px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.55);
+            color: white;
+            cursor: pointer;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+            transition: background 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+            font-family: 'Cinzel', serif;
+            letter-spacing: 0.04em;
+        }
+
+        .boton-flotante:hover {
+            background: rgba(0, 0, 0, 0.75);
+            transform: scale(1.04);
+        }
+
+        .boton-flotante:disabled {
+            opacity: 0.35;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        #previousBtn {
+            left: 16px;
+        }
+
+        #nextBtn {
+            right: 16px;
+        }
+
         @media (max-width: 760px) {
             .rosario-panel {
-                padding: 14px 10px;
+                padding: 14px 10px 80px;
             }
 
             .rosario-header h2 {
@@ -469,18 +475,10 @@
                 border-color: rgba(245, 213, 127, 1);
             }
 
-            .boton,
-            .boton-accion {
-                font-size: 0.9rem;
-                padding: 10px 12px;
-            }
-
-            .rosario-controles {
-                gap: 10px;
-            }
-
-            .boton-final {
-                width: min(100%, 260px);
+            .boton-flotante {
+                padding: 10px 18px;
+                font-size: 0.85rem;
+                bottom: 16px;
             }
         }
     </style>
@@ -529,13 +527,12 @@
         </div>
     </div>
 
-    <div class="progreso" id="progreso">Cuenta 0 de 55</div>
-
-    <div class="rosario-controles">
-        <button id="previousBtn" class="boton boton-accion">Anterior</button>
-        <button id="nextBtn" class="boton boton-accion">Siguiente</button>
-    </div>
+    <div class="progreso" id="progreso">Paso 1 de 1</div>
 </div>
+
+<!-- Botones flotantes fuera del panel, fijos en pantalla -->
+<button id="previousBtn" class="boton-flotante">Anterior</button>
+<button id="nextBtn" class="boton-flotante">Siguiente</button>
 
 <script>
     const sequence = [];
@@ -709,7 +706,6 @@
         let currentIndex = 0;
 
         function capitalizeDos(str) {
-            // Capitaliza solo la primera letra de cada palabra
             return str.split(' ').map(function(word) {
                 return word.replace(/^([a-záéíóúüñ])/i, function(c) {
                     return c.toUpperCase();
@@ -751,7 +747,6 @@
             if (!beads.length) return;
             const completedBeads = sequence.slice(0, currentIndex + 1).reduce((count, step) => count + (step.bead ? 1 : 0), 0);
 
-            // Si retrocedemos, actualizar directo sin animación
             if (completedBeads <= lastBeadCount) {
                 if (beadTimer) { clearTimeout(beadTimer); beadTimer = null; }
                 beads.forEach((bead, index) => {
@@ -761,7 +756,6 @@
                 return;
             }
 
-            // Si avanzamos exactamente 1 bolita, encenderla directo
             if (beadTimer) { clearTimeout(beadTimer); beadTimer = null; }
             let i = lastBeadCount;
             lastBeadCount = completedBeads;
@@ -815,7 +809,6 @@
             const currentMysteryIndex = getCurrentMysteryIndex(currentIndex);
             const currentMystery = currentMysteryIndex !== null && step.belongsToMystery ? sequence[currentMysteryIndex] : null;
 
-            // Mostrar tipo solo si no repite lo que ya dice el título
             const tituloTexto = currentMystery ? currentMystery.titulo : step.titulo;
             const tipoTexto = step.tipo;
             if (tipoMisterio) {
@@ -841,7 +834,7 @@
                 }
             }
             if (misterioActual) misterioActual.textContent = step.belongsToMystery ? step.titulo : '';
-            // Mostrar extracto del misterio o nota de la oración introductoria
+
             if (subtitulo) {
                 if (step.tipo === 'misterio' && step.extracto) {
                     subtitulo.textContent = step.extracto;
@@ -869,7 +862,6 @@
                 contenido.innerHTML = '';
             }
 
-            // Mostrar u ocultar botón Leer más
             if (btnLeerMas) {
                 if (hasModal(step)) {
                     btnLeerMas.style.display = 'inline-block';
@@ -879,7 +871,6 @@
             }
 
             const smallContentSteps = ['señal de la cruz', 'credo', 'padre nuestro', 'gloria'];
-
             if (contenido) {
                 if (step.tipo === 'ave maría' || smallContentSteps.includes(step.titulo.toLowerCase())) {
                     contenido.style.minHeight = '120px';
@@ -897,7 +888,6 @@
             renderIndicators();
         }
 
-        // Botón Leer más abre el modal
         if (btnLeerMas) {
             btnLeerMas.addEventListener('click', openModal);
         }
